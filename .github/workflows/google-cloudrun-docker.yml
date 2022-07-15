@@ -44,8 +44,10 @@ jobs:
       #     registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
       - name: Build and Push Container
         run: |-
-          docker-compose up -d          
-          docker push "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+          docker-compose up -d      
+          docker push  "postgres"   
+          
+      #docker push "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
 
       # docker build -t "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./
       # END - Docker auth and build
