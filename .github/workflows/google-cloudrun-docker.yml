@@ -7,14 +7,14 @@ on:
 
 env:
   PROJECT_ID: openmarket-356106
-  GAR_LOCATION: eu.gcr.io # TODO: update Artifact Registry location
-  SERVICE: postgresDocker # TODO: update Cloud Run service name
-  REGION: europe-southwest1 # TODO: update Cloud Run service region
+  GAR_LOCATION: eu.gcr.io 
+  SERVICE: postgresDocker 
+  REGION: europe-southwest1 
 
 jobs:
   deploy:
     # Add 'id-token' with the intended permissions for workload identity federation
-    #permissions:
+    permissions:
       contents: 'read'
       id-token: 'write'
 
