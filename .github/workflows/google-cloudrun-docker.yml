@@ -10,6 +10,7 @@ env:
   GAR_LOCATION: eu.gcr.io 
   SERVICE: postgresdocker 
   REGION: europe-southwest1 
+  IMAGE_NAME: postgresdocker
 
 jobs:
   deploy:
@@ -34,6 +35,22 @@ jobs:
          gcloud auth configure-docker --quiet
          gcloud auth configure-docker europe-southwest1-docker.pkg.dev --quiet
 
+
+      - name: Build Docker image
+         run: docker build . -t $IMAGE_NAME
+
+      - name: Test Docker image
+        run: docker run $IMAGE_NAME -p 5432:5432        
+
+      - name: Push Docker image
+        run: docker push $IMAGE_NAME
+
+      - name: Deploy Docker image
+        run: gcloud run deploy ${{ env.PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
+
+
+
+
       # Authenticate Docker to Google Cloud Artifact Registry
       # - name: Docker Auth        
       #   id: docker-auth
@@ -42,22 +59,22 @@ jobs:
       #     username: 'oauth2accesstoken'
       #     password: '${{ steps.auth.outputs.access_token }}'
       #     registry: '${{ env.GAR_LOCATION }}-docker.pkg.dev'
-      - name: Build and Push Container
-        run: |-
-          docker build -t "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./          
-          docker push "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
+      #- name: Build and Push Container        
+      #  run: |-
+      #    docker build -t "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./          
+      #    docker push "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
 
       
       # END - Docker auth and build
 
-      - name: Deploy to Cloud Run
-        id: deploy
-        uses: google-github-actions/deploy-cloudrun@v0
-        with:
-          service: ${{ env.SERVICE }}
-          region: ${{ env.REGION }}
-          flags: "--allow-unauthenticated"
-          image: eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
+      #- name: Deploy to Cloud Run
+        # id: deploy
+        # uses: google-github-actions/deploy-cloudrun@v0
+        # with:
+        #   service: ${{ env.SERVICE }}
+        #   region: ${{ env.REGION }}
+        #   flags: "--allow-unauthenticated"
+        #   image: eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output

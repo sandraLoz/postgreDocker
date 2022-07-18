@@ -1,3 +1,5 @@
 FROM postgres
 ENV POSTGRES_PASSWORD postgres
 ENV POSTGRES_DB test_docker
+
+EXPOSE 5432
