@@ -47,7 +47,7 @@ jobs:
           docker build -t "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./          
           docker push "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
 
-      
+      # 
       # END - Docker auth and build
 
       - name: Deploy to Cloud Run
