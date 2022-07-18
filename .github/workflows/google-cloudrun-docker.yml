@@ -36,16 +36,19 @@ jobs:
          gcloud auth configure-docker europe-southwest1-docker.pkg.dev --quiet
 
       - name: Build Docker image
-        run: docker build . -t $IMAGE_NAME
+        run: docker build -t "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" ./
+      
+      #run: docker build . -t $IMAGE_NAME
 
       #- name: Test Docker image
       #  run: docker run -p 5432:5432 $IMAGE_NAME       
 
       - name: Push Docker image
-        run: docker push $IMAGE_NAME
+        run: docker push "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}"
 
+      #run: docker push $IMAGE_NAME
       - name: Deploy Docker image
-        run: gcloud run deploy ${{ env.PROJECT_ID }} --image $IMAGE_NAME --region us-central1 --platform managed
+        run: gcloud run deploy ${{ env.PROJECT_ID }} --image "eu.gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{ github.sha }}" --region ${{ env.REGION }} --platform managed
 
 
 
